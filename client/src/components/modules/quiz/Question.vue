@@ -1,21 +1,21 @@
 <template>
     <div class="question-container">
         <p class="question-number">
-            <b>Questão {{ questionNumber }} - {{ typeInput }}<span class="required">*</span>: </b>
+            <b>Questão {{ number }} - {{ type }}<span class="required">*</span>: </b>
         </p>
         <p class="question-description">
-            {{ questionDescription }}
+            {{ description }}
         </p>
 
         <!-- Input type: Radio Button, just showing when typeInput property comes with value 'radioButton' -->
-        <div v-show="typeInput === 'radioButton'" class="radio-container">
+        <div v-show="type === 'radioButton'" class="radio-container">
             <div v-for="(option, index) in options">
                 <input 
                     type="radio" 
                     class="" 
                     :id="'option-' + index" 
                     :value="option"
-                    :name="'answer-question-' + questionNumber"
+                    :name="'answer-question-' + number"
                     required>
                 <label :for="'option-' + index">{{ option }}</label>
             </div>
@@ -23,7 +23,7 @@
 
         <!-- Input type: Text Area, just showing when typeInput property comes with value 'textArea'-->
         <textarea 
-            v-show="typeInput === 'textArea'" 
+            v-show="type === 'textArea'" 
             class="question-answer" 
             placeholder="Escreva sua resposta aqui"
             name="answer-question-n" 
@@ -38,7 +38,7 @@ import { defineComponent } from 'vue';
 export default defineComponent({
     name: "Question",
     props: {
-        questionNumber: {
+        number: {
             type: Number,
             required: true
         },
@@ -46,11 +46,11 @@ export default defineComponent({
             type: Boolean,
             required: true
         },
-        typeInput: {
+        type: {
             type: String,
             required: true
         },
-        questionDescription: {
+        description: {
             type: String,
             required: true
         },
@@ -67,13 +67,12 @@ export default defineComponent({
     methods: {
         init() {
             console.log("Called init() method");
-        }
+        },
     },
     created() {
         console.log("Created succesefuly...");
         this.init();
     }
-
 })
 </script>
 
