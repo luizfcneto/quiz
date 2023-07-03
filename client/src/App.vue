@@ -59,8 +59,6 @@ table {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0 auto;
-  text-align: center;
   color: #2c3e50;
-  background-color: #FFF9DE;
 }
 </style>
