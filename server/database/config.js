@@ -1,6 +1,13 @@
 import { Sequelize } from 'sequelize';
+import * as env from "dotenv";
 
-const sequelize = new Sequelize('quiz', 'quiz', 'quiz', {
+// Inicializando env
+env.config();
+
+const sequelize = new Sequelize(
+    process.env.POSTGRES_HOST,
+    process.env.POSTGRES_USER,
+    process.env.POSTGRES_PASSWORD, {
     dialect: 'postgres',
     logging: console.log,
     define: {
