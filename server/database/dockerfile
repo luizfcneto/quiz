@@ -11,8 +11,5 @@ COPY postgresql.conf /etc/postgresql/postgresql.conf
 # Expor a porta 5432 para permitir conexões externas
 EXPOSE 5432
 
-# Copiar os arquivos SQL para inicializar o banco de dados (opcional)
-COPY init.sql /docker-entrypoint-initdb.d/
-
 # Inicializar o banco de dados PostgreSQL
 CMD ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]

@@ -1,12 +1,9 @@
-const express = require("express");
+import express from "express";
 
 const APP = express();
-const PORT = 8081;
+const PORT = 3000;
 
-APP.get("/status", (request, response) => {
-    response.status(200);
-    response.send("Servidor Online");
-});
+APP.use(express.json());
 
 APP.listen(PORT, (error) => {
     if (!error) {
