@@ -46,10 +46,7 @@
             >
                 <h3>{{ index + 1 }}. {{ question.text }}</h3>
                 <p>Tipo de resposta: {{ question.type }}</p>
-                <p>
-                    Resposta Obrigatória:
-                    {{ question.isRequired ? 'Sim' : 'Não' }}
-                </p>
+
                 <div
                     v-if="
                         question.type === 'radio' ||
@@ -69,13 +66,73 @@
                         </li>
                     </ul>
                 </div>
+                <p class="required-answer-btn">
+                    Resposta Obrigatória:
+                    <span
+                        class="answer-status"
+                        :class="{
+                            'positive-answer-btn': question.isRequired,
+                            'negative-answer-btn': !question.isRequired
+                        }"
+                        >{{ question.isRequired ? 'Sim' : 'Não' }}</span
+                    >
+                </p>
+                <button class="edit-question-btn" @click="openEditModal(index)">
+                    <!-- Botão para editar a pergunta -->
+                    Editar
+                </button>
                 <button
                     class="remove-question-btn"
                     @click="removeQuestion(index)"
-                ><!-- Botão para remover a pergunta -->
+                >
+                    <!-- Botão para remover a pergunta -->
                     Remover
                 </button>
-                
+            </div>
+        </div>
+        <div class="edit-modal" v-if="editedQuestionIndex !== -1">
+            <div class="modal-content">
+                <h2>Editar Pergunta</h2>
+                <div class="question-type">
+                    <label>Qual o tipo de resposta:</label>
+                    <div class="select-container">
+                        <select v-model="selectedType">
+                            <option
+                                v-for="option in responseTypes"
+                                :key="option.value"
+                                :value="option.value"
+                            >
+                                {{ option.label }}
+                            </option>
+                        </select>
+                        <div class="select-arrow"></div>
+                    </div>
+                    <label class="checkbox-container">
+                        <input type="checkbox" v-model="responseIsRequired" />
+                        Resposta Obrigatória
+                    </label>
+                </div>
+                <div class="question-box">
+                    <label class="question-label">Pergunta:</label>
+                    <textarea
+                        class="question-textarea"
+                        v-model="questionText"
+                    />
+                </div>
+                <div class="answer-container">
+                    <component
+                        :is="componentMap[selectedType]"
+                        ref="answerComponent"
+                    />
+                </div>
+                <div class="modal-buttons">
+                    <button class="cancel-btn" @click="closeEditModal">
+                        Cancelar
+                    </button>
+                    <button class="save-btn" @click="saveEditedQuestion">
+                        Salvar
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -103,7 +160,8 @@ export default {
             ],
             responseIsRequired: false, // Propriedade para controlar se a resposta é obrigatória
             questionText: '', // Texto da pergunta atual
-            questions: [] // Array para armazenar as perguntas adicionadas
+            questions: [], // Array para armazenar as perguntas adicionadas
+            editedQuestionIndex: -1
         };
     },
     components: {
@@ -152,6 +210,49 @@ export default {
         removeQuestion(index) {
             // Método para remover a pergunta do array com base no índice
             this.questions.splice(index, 1);
+        },
+        editedQuestionIndex(index) {
+            this.editedQuestionIndex = index;
+            const question = this.questions[index];
+            this.selectedType = question.type;
+            this.responseIsRequired = question.isRequired;
+            this.questionText = question.text;
+            // Preencha a resposta, dependendo do tipo de pergunta (se houver)
+            if (question.type === 'radio' || question.type === 'checkbox') {
+                const answerComponent = this.$refs.answerComponent;
+                answerComponent.selectedOptions = question.answers;
+            }
+        },
+        openEditModal(index) {
+            this.editedQuestionIndex = index;
+            const question = this.questions[index];
+            this.selectedType = question.type;
+            this.responseIsRequired = question.isRequired;
+            this.questionText = question.text;
+            // Preencha a resposta, dependendo do tipo de pergunta (se houver)
+            if (question.type === 'radio' || question.type === 'checkbox') {
+                const answerComponent = this.$refs.answerComponent;
+                answerComponent.selectedOptions = question.answers;
+            }
+        },
+        closeEditModal() {
+            this.editedQuestionIndex = -1;
+        },
+        saveEditedQuestion() {
+            if (this.editedQuestionIndex !== -1) {
+                const question = this.questions[this.editedQuestionIndex];
+                question.text = this.questionText;
+                question.type = this.selectedType;
+                question.isRequired = this.responseIsRequired;
+                if (
+                    this.selectedType === 'radio' ||
+                    this.selectedType === 'checkbox'
+                ) {
+                    const answerComponent = this.$refs.answerComponent;
+                    question.answers = answerComponent.selectedOptions;
+                }
+                this.closeEditModal();
+            }
         },
         getLetter(index) {
             // Array com as letras do alfabeto (de A a Z)
@@ -207,8 +308,9 @@ export default {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.questions-list {/* Estilos para a lista de respostas */
-  margin-top: 30px;
+.questions-list {
+    /* Estilos para a lista de respostas */
+    margin-top: 30px;
 }
 
 .question-box {
@@ -222,7 +324,7 @@ export default {
 }
 
 .question-textarea {
-    width: 100%;
+    min-width: 97%;
     min-height: 100px;
     padding: 10px; /* Espaçamento menor dentro da caixa de texto */
     border: 1px solid #ccc;
@@ -292,6 +394,46 @@ ul {
     background-color: #db1a1a; /* Tom mais escuro ao passar o mouse */
 }
 
+.edit-question-btn {
+    position: absolute;
+    top: 15px; /* Espaçamento do topo */
+    right: 100px; /* Espaçamento da direita */
+    padding: 5px 10px;
+    background-color: #007bff; /* Vermelho leve */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.edit-question-btn:hover {
+    background-color: #0056b3; /* Tom mais escuro ao passar o mouse */
+}
+
+.required-answer-btn {
+    position: absolute;
+    color: white;
+    top: 0px; /* Espaçamento do topo */
+    right: 170px; /* Espaçamento da direita */
+    padding: 5px 5px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    background: rgb(180, 146, 194);
+}
+.positive-answer-btn {
+    background-color: #dd5249;
+    padding: 4px 4px;
+    border-radius: 4px;
+}
+
+.negative-answer-btn {
+    background-color: rgb(71, 189, 71);
+    padding: 4px 4px;
+    border-radius: 4px;
+}
+
 .select-container {
     position: relative;
 }
@@ -345,5 +487,65 @@ option {
 /* Alterando a cor de fundo ao passar o mouse nas opções */
 option:hover {
     background-color: #f0f0f0;
+}
+
+
+.edit-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-width: 400px; /* Defina a largura do modal de acordo com suas preferências */
+}
+
+.modal-content h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.cancel-btn,
+.save-btn {
+    padding: 10px 20px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.cancel-btn {
+    background-color: #ccc;
+    color: #fff;
+}
+
+.save-btn {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.cancel-btn:hover{
+    background-color: #db1a1a;
+}
+.save-btn:hover {
+    background-color: #0056b3;
 }
 </style>

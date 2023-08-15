@@ -94,10 +94,10 @@ export default {
 
 .radio-type-answer button:last-child {
   margin-left: 10px;
-  background-color: #f44336;
+  background-color: #dd5249; /* Vermelho leve */
 }
 
 .radio-type-answer button:last-child:hover {
-  background-color: #d32f2f;
+  background-color: #db1a1a; /* Tom mais escuro ao passar o mouse */
 }
 </style>
