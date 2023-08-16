@@ -1,20 +1,23 @@
 <template>
-  <div class="checkbox-type-answer">
-    <label>Resposta em Caixa de Seleção:</label>
-    <button @click="addOption">Adicionar Opção</button>
-    <div v-for="(option, index) in checkboxOptions" :key="index">
-      <input
-        type="checkbox"
-        :name="`checkboxQuestion-${uniqueId}`"
-        :value="option"
-        disabled
-      />
-      <input type="text" v-model="option.value" />
-      <button @click="removeOption(index)" v-if="checkboxOptions.length > 1">
-        Remover
-      </button>
+    <div class="checkbox-type-answer">
+        <label>Resposta em Caixa de Seleção:</label>
+        <div v-for="(option, index) in checkboxOptions" :key="index">
+            <input
+                type="checkbox"
+                :name="`checkboxQuestion-${uniqueId}`"
+                :value="option"
+                disabled
+            />
+            <input type="text" v-model="option.value" />
+            <button
+                @click="removeOption(index)"
+                v-if="checkboxOptions.length > 1"
+            >
+                Remover
+            </button>
+        </div>
+        <button id="checkbox-type-answer-add-option" @click="addOption">Adicionar Opção</button>
     </div>
-  </div>
 </template>
 
 <script>
@@ -48,56 +51,64 @@ export default {
 
 <style scoped>
 .checkbox-type-answer {
-  margin-bottom: 20px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 .checkbox-type-answer label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 10px;
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 
 .checkbox-type-answer button {
-  margin-bottom: 10px;
-  padding: 5px 10px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 .checkbox-type-answer button:hover {
-  background-color: #0056b3;
+    background-color: #0056b3;
 }
 
 .checkbox-type-answer div {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
-.checkbox-type-answer input[type="checkbox"] {
-  margin-right: 10px;
+.checkbox-type-answer input[type='checkbox'] {
+    margin-right: 10px;
 }
 
-.checkbox-type-answer input[type="text"] {
-  flex: 1;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.checkbox-type-answer input[type='text'] {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 .checkbox-type-answer button:last-child {
-  margin-left: 10px;
-  background-color: #dd5249; /* Vermelho leve */
+    margin-left: 10px;
+    background-color: #dd5249; /* Vermelho leve */
 }
 
 .checkbox-type-answer button:last-child:hover {
-  background-color: #db1a1a; /* Tom mais escuro ao passar o mouse */
+    background-color: #db1a1a; /* Tom mais escuro ao passar o mouse */
+}
+
+#checkbox-type-answer-add-option{
+  background-color: #0f8b19; /* Tom mais escuro ao passar o mouse */
+}
+
+#checkbox-type-answer-add-option:hover{
+  background-color: #17b925; /* Tom mais escuro ao passar o mouse */
 }
 </style>

@@ -1,21 +1,21 @@
 <template>
     <div class="radio-type-answer">
-      <label>Resposta em Multipla Escolha:</label>
-      <button @click="addOption">Adicionar Opção</button>
-      <div v-for="(option, index) in radioOptions" :key="index">
-        <input
-          type="radio"
-          :name="`radioQuestion-${uniqueId}`"
-          :value="option"
-          disabled
-        />
-        <input type="text" v-model="option.value" />
-        <button @click="removeOption(index)" v-if="radioOptions.length > 1">
-          Remover
-        </button>
-      </div>
+        <label>Resposta em Multipla Escolha:</label>
+        <div v-for="(option, index) in radioOptions" :key="index">
+            <input
+                type="radio"
+                :name="`radioQuestion-${uniqueId}`"
+                :value="option"
+                disabled
+            />
+            <input type="text" v-model="option.value" />
+            <button @click="removeOption(index)" v-if="radioOptions.length > 1">
+                Remover
+            </button>
+        </div>
+        <button id="radio-type-answer-add-option" @click="addOption">Adicionar Opção</button>
     </div>
-  </template>
+</template>
 
 <script>
 export default {
@@ -48,56 +48,65 @@ export default {
 
 <style scoped>
 .radio-type-answer {
-  margin-bottom: 20px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 .radio-type-answer label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 10px;
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 
 .radio-type-answer button {
-  margin-bottom: 10px;
-  padding: 5px 10px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 .radio-type-answer button:hover {
-  background-color: #0056b3;
+    background-color: #0056b3;
 }
 
 .radio-type-answer div {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
-.radio-type-answer input[type="radio"] {
-  margin-right: 10px;
+.radio-type-answer input[type='radio'] {
+    margin-right: 10px;
 }
 
-.radio-type-answer input[type="text"] {
-  flex: 1;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.radio-type-answer input[type='text'] {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 .radio-type-answer button:last-child {
-  margin-left: 10px;
-  background-color: #dd5249; /* Vermelho leve */
+    margin-left: 10px;
+    background-color: #dd5249; /* Vermelho leve */
 }
 
 .radio-type-answer button:last-child:hover {
-  background-color: #db1a1a; /* Tom mais escuro ao passar o mouse */
+    background-color: #db1a1a; /* Tom mais escuro ao passar o mouse */
 }
+
+#radio-type-answer-add-option{
+  background-color: #0f8b19; /* Tom mais escuro ao passar o mouse */
+}
+
+#radio-type-answer-add-option:hover{
+  background-color: #17b925; /* Tom mais escuro ao passar o mouse */
+}
+
 </style>

@@ -90,7 +90,7 @@
                 </button>
             </div>
         </div>
-        <div class="edit-modal" v-if="editedQuestionIndex !== -1">
+        <div class="edit-modal" v-if="currentEditedQuestionIndex !== -1">
             <div class="modal-content">
                 <h2>Editar Pergunta</h2>
                 <div class="question-type">
@@ -161,7 +161,7 @@ export default {
             responseIsRequired: false, // Propriedade para controlar se a resposta é obrigatória
             questionText: '', // Texto da pergunta atual
             questions: [], // Array para armazenar as perguntas adicionadas
-            editedQuestionIndex: -1
+            currentEditedQuestionIndex: -1
         };
     },
     components: {
@@ -212,7 +212,7 @@ export default {
             this.questions.splice(index, 1);
         },
         editedQuestionIndex(index) {
-            this.editedQuestionIndex = index;
+            this.currentEditedQuestionIndex = index;
             const question = this.questions[index];
             this.selectedType = question.type;
             this.responseIsRequired = question.isRequired;
@@ -221,26 +221,20 @@ export default {
             if (question.type === 'radio' || question.type === 'checkbox') {
                 const answerComponent = this.$refs.answerComponent;
                 answerComponent.selectedOptions = question.answers;
+            } else {
+                const answerComponent = this.$refs.answerComponent;
+                answerComponent.clearSelectedOptions(); // Limpe as respostas selecionadas
             }
         },
         openEditModal(index) {
-            this.editedQuestionIndex = index;
-            const question = this.questions[index];
-            this.selectedType = question.type;
-            this.responseIsRequired = question.isRequired;
-            this.questionText = question.text;
-            // Preencha a resposta, dependendo do tipo de pergunta (se houver)
-            if (question.type === 'radio' || question.type === 'checkbox') {
-                const answerComponent = this.$refs.answerComponent;
-                answerComponent.selectedOptions = question.answers;
-            }
+            this.currentEditedQuestionIndex = index;
         },
         closeEditModal() {
-            this.editedQuestionIndex = -1;
+            this.currentEditedQuestionIndex = -1;
         },
         saveEditedQuestion() {
-            if (this.editedQuestionIndex !== -1) {
-                const question = this.questions[this.editedQuestionIndex];
+            if (this.currentEditedQuestionIndex !== -1) {
+                const question = this.questions[this.currentEditedQuestionIndex];
                 question.text = this.questionText;
                 question.type = this.selectedType;
                 question.isRequired = this.responseIsRequired;
@@ -489,7 +483,6 @@ option:hover {
     background-color: #f0f0f0;
 }
 
-
 .edit-modal {
     position: fixed;
     top: 0;
@@ -542,7 +535,7 @@ option:hover {
     color: #fff;
 }
 
-.cancel-btn:hover{
+.cancel-btn:hover {
     background-color: #db1a1a;
 }
 .save-btn:hover {
