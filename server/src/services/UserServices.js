@@ -7,7 +7,6 @@ export const findUserById = async (id) => {
     return await User.findByPk(id);
 }
 
-
 export const createUserService = async (user) => {
     console.log("executando createUserService");
     await User.sync();
@@ -35,4 +34,18 @@ export const updateUserService = async (newUser) => {
     }else {
         throw new Error("Error, user not found");
     }
+}
+
+export const deleteUserService = async (id) => {
+    console.log("deleteUserService executado");
+    await User.sync();
+
+    let userPersisted = await findUserById(id);
+    
+    if(!userPersisted){
+        throw new Error("Error, user not found");
+    }
+
+    await userPersisted.destroy();
+    // await User.destroy({where: { id: id }});
 }

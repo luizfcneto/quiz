@@ -1,4 +1,4 @@
-import { createUserService, updateUserService } from "../services/UserServices.js";
+import { createUserService, updateUserService, deleteUserService } from "../services/UserServices.js";
 import { validateCreateUser, validateUpdateUser } from "../validations/userValidations.js";
 
 export default {
@@ -65,5 +65,25 @@ export default {
             return;
         }
 
+    },
+
+    async delete(req, res, next) {
+        console.log("Rota: /user/delete/:id executada com sucesso");
+        console.log("Param :id ", req.params.id);
+        const userId = req.params.id;
+
+        try {
+            await deleteUserService(userId);
+            res.status(204).json();
+            return;
+
+        }catch(error) {
+            console.error(error.name, error.message);
+
+            res.status(404).json({
+                message: error.message
+            });
+            return;
+        }
     }
 }
