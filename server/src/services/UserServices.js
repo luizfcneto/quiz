@@ -1,15 +1,38 @@
 import User from "../models/User.js";
 
+export const findUserById = async (id) => {
+    console.log("executando findUserById");
+    await User.sync();
+
+    return await User.findByPk(id);
+}
+
+
 export const createUserService = async (user) => {
-    console.log("executando createUserService")
+    console.log("executando createUserService");
     await User.sync();
     
-    const userExists = await User.findOne({ where: { email: user.email } });
+    const userExists = await findUserById(user.id);
 
     if(!userExists){
-        const responseUserCreate = await User.create(user);
-        return responseUserCreate.dataValues;
+        return await User.create(user);
     }else {
         throw new Error("Bad Request, user already exists");
+    }
+}
+
+export const updateUserService = async (newUser) => {
+    console.log("executando updateUserService");
+    await User.sync();
+
+    let userPersisted = await findUserById(newUser.id);
+
+    if(userPersisted) {
+        userPersisted.name = newUser.name;
+        userPersisted.password = newUser.password;
+        return await userPersisted.save();
+
+    }else {
+        throw new Error("Error, user not found");
     }
 }
